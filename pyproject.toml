@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thefuck"
+version = "3.32"
+description = "Magnificent app which corrects your previous console command"
+authors = [{name = "Vladimir Iakovlev", email = "nvbn.rm@gmail.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Shells",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "psutil",
+    "colorama",
+    "six",
+    "decorator",
+    "pyte",
+    "backports.shutil-get-terminal-size; python_version < '3.3'",
+    "pathlib2; python_version < '3.4'",
+    "win-unicode-console; sys_platform == 'win32'",
+]
+
+[project.urls]
+Homepage = "https://github.com/nvbn/thefuck"
+Repository = "https://github.com/nvbn/thefuck"
+
+[project.scripts]
+thefuck = "thefuck.entrypoints.main:main"
+fuck = "thefuck.entrypoints.not_configured:main"
+
+[tool.setuptools.packages.find]
+include = ["thefuck*"]
