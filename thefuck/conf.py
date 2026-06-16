@@ -22,6 +22,7 @@ def _load_source(name: str, path: str) -> Any:
 
 import os
 import sys
+import threading
 from collections.abc import Iterator
 from typing import Any
 from warnings import warn
@@ -41,30 +42,45 @@ def _load_settings_from(settings_path: str) -> dict[str, Any]:
 
 
 class Settings(dict):
+    def __init__(self, *args, **kwargs):
+        # Bypass __setattr__ to avoid _lock not-yet-existing error
+        dict.__setitem__(self, '_lock', threading.RLock())
+        super().__init__(*args, **kwargs)
+
     def __getattr__(self, item: str) -> Any:
         return self.get(item)
 
     def __setattr__(self, key: str, value: Any) -> None:
-        self[key] = value
+        with self._lock:
+            self[key] = value
+
+    def update(self, *args, **kwargs) -> None:  # type: ignore[override]
+        with self._lock:
+            super().update(*args, **kwargs)
+
+    def setdefault(self, key: str, default: Any = None) -> Any:
+        with self._lock:
+            return super().setdefault(key, default)
 
     def init(self, args: Any = None) -> None:
         """Fills `settings` with values from `settings.py` and env."""
-        from .logs import exception
+        with self._lock:
+            from .logs import exception
 
-        self._setup_user_dir()
-        self._init_settings_file()
+            self._setup_user_dir()
+            self._init_settings_file()
 
-        try:
-            self.update(self._settings_from_file())
-        except Exception:
-            exception("Can't load settings from file", sys.exc_info())
+            try:
+                self.update(self._settings_from_file())
+            except Exception:
+                exception("Can't load settings from file", sys.exc_info())
 
-        try:
-            self.update(self._settings_from_env())
-        except Exception:
-            exception("Can't load settings from env", sys.exc_info())
+            try:
+                self.update(self._settings_from_env())
+            except Exception:
+                exception("Can't load settings from env", sys.exc_info())
 
-        self.update(self._settings_from_args(args))
+            self.update(self._settings_from_args(args))
 
     def _init_settings_file(self) -> None:
         settings_path = self.user_dir.joinpath('settings.py')

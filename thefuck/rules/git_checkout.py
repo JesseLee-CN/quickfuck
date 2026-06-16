@@ -1,7 +1,7 @@
 import re
 import subprocess
 from thefuck import utils
-from thefuck.utils import replace_argument
+from thefuck.utils import memoize, replace_argument
 from thefuck.specific.git import git_support
 from thefuck.shells import shell
 
@@ -12,10 +12,12 @@ def match(command):
             and "Did you forget to 'git add'?" not in command.output)
 
 
+@memoize
 def get_branches():
     proc = subprocess.Popen(
         ['git', 'branch', '-a', '--no-color', '--no-column'],
         stdout=subprocess.PIPE)
+    branches = []
     for line in proc.stdout.readlines():
         line = line.decode('utf-8')
         if '->' in line:    # Remote HEAD like b'  remotes/origin/HEAD -> origin/master'
@@ -24,7 +26,8 @@ def get_branches():
             line = line.split(' ')[1]
         if line.strip().startswith('remotes/'):
             line = '/'.join(line.split('/')[2:])
-        yield line.strip()
+        branches.append(line.strip())
+    return branches
 
 
 @git_support

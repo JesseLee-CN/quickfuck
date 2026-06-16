@@ -303,6 +303,7 @@ def cache(*depends_on: str) -> Callable:
 cache.disabled = False
 
 
+@memoize
 def get_installation_version() -> str:
     try:
         from importlib.metadata import version

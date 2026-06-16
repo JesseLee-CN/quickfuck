@@ -1,7 +1,7 @@
 import subprocess
 from thefuck.specific.apt import apt_available
 from thefuck.specific.sudo import sudo_support
-from thefuck.utils import for_app, eager, replace_command
+from thefuck.utils import for_app, eager, memoize, replace_command
 
 enabled_by_default = apt_available
 
@@ -39,6 +39,7 @@ def _parse_apt_get_and_cache_operations(help_text_lines):
             is_commands_list = True
 
 
+@memoize
 def _get_operations(app):
     proc = subprocess.Popen([app, '--help'],
                             stdout=subprocess.PIPE,

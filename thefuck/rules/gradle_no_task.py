@@ -1,6 +1,6 @@
 import re
 from subprocess import Popen, PIPE
-from thefuck.utils import for_app, eager, replace_command
+from thefuck.utils import for_app, eager, memoize, replace_command
 
 regex = re.compile(r"Task '(.*)' (is ambiguous|not found)")
 
@@ -10,6 +10,7 @@ def match(command):
     return regex.findall(command.output)
 
 
+@memoize
 @eager
 def _get_all_tasks(gradle):
     proc = Popen([gradle, 'tasks'], stdout=PIPE)

@@ -50,6 +50,11 @@ def get_output(script, expanded):
     :rtype: str | None
 
     """
+    last_output = os.environ.get('TF_LAST_OUTPUT')
+    if last_output is not None:
+        logs.debug(u'Using pre-captured output from TF_LAST_OUTPUT')
+        return last_output
+
     env = dict(os.environ)
     env.update(settings.env)
 
