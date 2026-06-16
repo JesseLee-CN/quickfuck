@@ -48,6 +48,7 @@ Repository = "https://github.com/JesseLee-CN/TheQuickFuckforWsl2"
 [project.scripts]
 thefuck = "thefuck.entrypoints.main:main"
 fuck = "thefuck.entrypoints.not_configured:main"
+thefuckd = "thefuck.daemon:main"
 
 [tool.setuptools.packages.find]
 include = ["thefuck*"]
