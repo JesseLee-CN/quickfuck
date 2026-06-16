@@ -1,0 +1,16 @@
+[Unit]
+Description=thefuckd — persistent daemon for instant command correction
+Documentation=https://github.com/JesseLee-CN/quickfuck
+After=default.target
+
+[Service]
+Type=forking
+ExecStart=%h/.local/bin/thefuckd start
+ExecStop=%h/.local/bin/thefuckd stop
+Restart=on-failure
+RestartSec=5
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+WorkingDirectory=%h
+
+[Install]
+WantedBy=default.target
