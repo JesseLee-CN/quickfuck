@@ -1,4 +1,4 @@
-# The Fuck — Optimized for Python 3.12+ and WSL2
+# quickfuck — Optimized for Python 3.12+ and WSL2
 
 基于 [thefuck](https://github.com/nvbn/thefuck) v3.32 的优化版本，修复 Python 3.12 兼容性并大幅提升 WSL2 下的性能。
 
