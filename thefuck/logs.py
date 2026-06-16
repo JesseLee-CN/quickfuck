@@ -78,8 +78,10 @@ def confirm_text(corrected_command: CorrectedCommand) -> None:
             blue=color(colorama.Fore.BLUE)))
 
 
-def debug(msg: str) -> None:
+def debug(msg: str, *args, **kwargs) -> None:
     if settings.debug:
+        if args or kwargs:
+            msg = msg.format(*args, **kwargs)
         sys.stderr.write(u'{blue}{bold}DEBUG:{reset} {msg}\n'.format(
             msg=msg,
             reset=color(colorama.Style.RESET_ALL),

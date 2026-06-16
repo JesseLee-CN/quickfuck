@@ -95,8 +95,8 @@ def organize_commands(corrected_commands: Iterable[CorrectedCommand]) -> Iterabl
         without_duplicates,
         key=lambda corrected_command: corrected_command.priority)
 
-    logs.debug(u'Corrected commands: {}'.format(
-        ', '.join(u'{}'.format(cmd) for cmd in [first_command] + sorted_commands)))
+    logs.debug(u'Corrected commands: {}',
+               ', '.join(u'{}'.format(cmd) for cmd in [first_command] + sorted_commands))
 
     for command in sorted_commands:
         yield command

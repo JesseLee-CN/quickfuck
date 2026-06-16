@@ -29,6 +29,17 @@ from . import const
 from .system import Path
 
 
+def _load_settings_from(settings_path: str) -> dict[str, Any]:
+    """Loads and returns settings dict from settings.py.
+
+    Cached with ``memoize`` below to avoid recompiling on every invocation.
+    """
+    settings = _load_source('settings', settings_path)
+    return {key: getattr(settings, key)
+            for key in const.DEFAULT_SETTINGS.keys()
+            if hasattr(settings, key)}
+
+
 class Settings(dict):
     def __getattr__(self, item: str) -> Any:
         return self.get(item)
@@ -88,11 +99,7 @@ class Settings(dict):
 
     def _settings_from_file(self) -> dict[str, Any]:
         """Loads settings from file."""
-        settings = _load_source(
-            'settings', str(self.user_dir.joinpath('settings.py')))
-        return {key: getattr(settings, key)
-                for key in const.DEFAULT_SETTINGS.keys()
-                if hasattr(settings, key)}
+        return _load_settings_from(str(self.user_dir.joinpath('settings.py')))
 
     def _rules_from_env(self, val: str) -> list[str]:
         """Transforms rules list from env-string to python."""
@@ -150,3 +157,6 @@ class Settings(dict):
 
 
 settings: Settings = Settings(const.DEFAULT_SETTINGS)
+
+from functools import lru_cache  # noqa: E402
+_load_settings_from = lru_cache(maxsize=1)(_load_settings_from)

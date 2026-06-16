@@ -1,6 +1,6 @@
 import os
 import re
-from thefuck.utils import get_closest, replace_command
+from thefuck.utils import get_closest, memoize, replace_command
 from thefuck.specific.brew import get_brew_path_prefix, brew_available
 
 BREW_CMD_PATH = '/Homebrew/Library/Homebrew/cmd'
@@ -54,6 +54,7 @@ def _get_directory_names_only(path):
             if os.path.isdir(os.path.join(path, d))]
 
 
+@memoize
 def _brew_commands():
     brew_path_prefix = get_brew_path_prefix()
     if brew_path_prefix:
