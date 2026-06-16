@@ -26,7 +26,10 @@ stash_commands = (
 
 @git_support
 def get_new_command(command):
-    stash_cmd = command.script_parts[2]
+    if len(command.script_parts) >= 3:
+        stash_cmd = command.script_parts[2]
+    else:
+        stash_cmd = ''
     fixed = utils.get_closest(stash_cmd, stash_commands, fallback_to_first=False)
 
     if fixed is not None:

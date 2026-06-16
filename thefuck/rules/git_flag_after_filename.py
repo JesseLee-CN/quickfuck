@@ -16,13 +16,21 @@ def get_new_command(command):
 
     # find the bad flag
     bad_flag = match(command).group(1)
-    bad_flag_index = command_parts.index(bad_flag)
+    try:
+        bad_flag_index = command_parts.index(bad_flag)
+    except ValueError:
+        return command.script
 
     # find the filename
+    filename_index = None
     for index in reversed(range(bad_flag_index)):
         if command_parts[index][0] != '-':
             filename_index = index
             break
+
+    # if no filename found before the flag, return original command
+    if filename_index is None:
+        return command.script
 
     # swap them
     command_parts[bad_flag_index], command_parts[filename_index] = \

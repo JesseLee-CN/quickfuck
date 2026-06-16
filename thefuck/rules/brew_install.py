@@ -10,6 +10,8 @@ def _get_formulas():
     # Formulas are based on each local system's status
     try:
         brew_path_prefix = get_brew_path_prefix()
+        if brew_path_prefix is None:
+            return
         brew_formula_path = brew_path_prefix + '/Library/Formula'
 
         for file_name in os.listdir(brew_formula_path):

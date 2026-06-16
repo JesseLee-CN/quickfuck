@@ -5,18 +5,19 @@ import pickle
 import re
 import shelve
 import sys
+import subprocess
 import threading
 from collections.abc import Callable, Iterable, Iterator
 from difflib import get_close_matches as difflib_get_close_matches
 from functools import wraps
-from typing import Any, TYPE_CHECKING, TypeVar
+from typing import Any, TYPE_CHECKING
 from .logs import warn, exception
 from .conf import settings
 from .system import Path
 if TYPE_CHECKING:
     from .types import Command
 
-DEVNULL: Any = open(os.devnull, 'w')
+DEVNULL = subprocess.DEVNULL
 
 import dbm
 shelve_open_error = dbm.error
@@ -136,10 +137,8 @@ def get_all_executables() -> list[str]:
 
 def replace_argument(script: str, from_: str, to: str) -> str:
     """Replaces command line argument."""
-    replaced_in_the_end = re.sub(u' {}$'.format(re.escape(from_)), u' {}'.format(to),
-                                 script, count=1)
-    if replaced_in_the_end != script:
-        return replaced_in_the_end
+    if script.endswith(' ' + from_):
+        return script[:-len(from_)] + to
     else:
         return script.replace(
             u' {} '.format(from_), u' {} '.format(to), 1)
@@ -207,13 +206,17 @@ class Cache(object):
 
     def __init__(self) -> None:
         self._db: Any = None
+        self._lock = threading.Lock()
 
     def _init_db(self) -> None:
-        try:
-            self._setup_db()
-        except Exception:
-            exception("Unable to init cache", sys.exc_info())
-            self._db = {}
+        with self._lock:
+            if self._db is not None:
+                return
+            try:
+                self._setup_db()
+            except Exception:
+                exception("Unable to init cache", sys.exc_info())
+                self._db = {}
 
     def _setup_db(self) -> None:
         cache_dir = self._get_cache_dir()
@@ -346,7 +349,7 @@ def format_raw_script(raw_script: list[str]) -> str:
 
     """
     script = ' '.join(raw_script)
-    return script.lstrip()
+    return script
 
 
 import contextlib  # noqa: E402

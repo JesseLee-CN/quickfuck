@@ -69,7 +69,7 @@ def get_rules() -> list[Rule]:
 
     """
     paths = [rule_path for path in get_rules_import_paths()
-             for rule_path in sorted(path.glob('*.py'))]
+             for rule_path in path.glob('*.py')]
     return sorted(get_loaded_rules(paths),
                   key=lambda rule: rule.priority)
 
@@ -88,8 +88,7 @@ def organize_commands(corrected_commands: Iterable[CorrectedCommand]) -> Iterabl
         return
 
     without_duplicates = {
-        command for command in sorted(
-            corrected_commands, key=lambda command: command.priority)
+        command for command in corrected_commands
         if command != first_command}
 
     sorted_commands = sorted(

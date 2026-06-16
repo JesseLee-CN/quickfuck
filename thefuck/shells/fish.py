@@ -73,7 +73,7 @@ class Fish(Generic):
 
     def _expand_aliases(self, command_script):
         aliases = self.get_aliases()
-        binary = command_script.split(' ')[0]
+        binary = command_script.split(' ', 1)[0]
         if binary in aliases and aliases[binary] != binary:
             return command_script.replace(binary, aliases[binary], 1)
         elif binary in aliases:

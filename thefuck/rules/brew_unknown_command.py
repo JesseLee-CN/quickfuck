@@ -12,6 +12,8 @@ enabled_by_default = brew_available
 
 def _get_brew_commands(brew_path_prefix):
     """To get brew default commands on local environment"""
+    if brew_path_prefix is None:
+        return []
     brew_cmd_path = brew_path_prefix + BREW_CMD_PATH
 
     return [name[:-3] for name in os.listdir(brew_cmd_path)
@@ -21,6 +23,8 @@ def _get_brew_commands(brew_path_prefix):
 def _get_brew_tap_specific_commands(brew_path_prefix):
     """To get tap's specific commands
     https://github.com/Homebrew/homebrew/blob/master/Library/brew.rb#L115"""
+    if brew_path_prefix is None:
+        return []
     commands = []
     brew_taps_path = brew_path_prefix + TAP_PATH
 

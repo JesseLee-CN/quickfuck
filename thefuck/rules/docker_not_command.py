@@ -42,7 +42,8 @@ if which('docker'):
 def get_new_command(command):
     if 'Usage:' in command.output and len(command.script_parts) > 1:
         management_subcommands = _parse_commands(command.output.split('\n'), 'Commands:')
-        return replace_command(command, command.script_parts[2], management_subcommands)
+        wrong_cmd = command.script_parts[2] if len(command.script_parts) >= 3 else command.script_parts[1]
+        return replace_command(command, wrong_cmd, management_subcommands)
 
     wrong_command = re.findall(
         r"docker: '(\w+)' is not a docker command.", command.output)[0]
