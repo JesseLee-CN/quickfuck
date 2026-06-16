@@ -41,7 +41,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/JesseLee-CN/TheQuickFuckforWsl2.git ~/projects/fuck
+git clone https://github.com/JesseLee-CN/quickfuck.git ~/projects/fuck
 cd ~/projects/fuck
 
 # 方式 A：pipx 安装（推荐，隔离环境）
