@@ -20,7 +20,7 @@ class Bash(Generic):
                 export TF_ALIAS={name};
                 export TF_SHELL_ALIASES=$(alias);
                 export TF_HISTORY=$(fc -ln -10);
-                export TF_LAST_OUTPUT=$(eval "$(fc -ln -2 | head -1)" 2>&1);
+                export TF_LAST_OUTPUT=$(LC_ALL=C eval "$(fc -ln -2 | head -1)" 2>&1);
                 export PYTHONIOENCODING=utf-8;
                 TF_CMD=$(
                     thefuck {argument_placeholder} "$@"

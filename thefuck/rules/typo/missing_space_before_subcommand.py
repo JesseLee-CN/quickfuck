@@ -5,8 +5,15 @@ from thefuck.utils import get_all_executables
 @memoize
 def _get_executable(script_part):
     for executable in get_all_executables():
-        if len(executable) > 1 and script_part.startswith(executable):
-            return executable
+        # Require executable to be at least 3 chars to avoid false positives
+        # like splitting 'print' into 'pr' + 'int' (pr is a valid command)
+        if len(executable) >= 3 and script_part.startswith(executable):
+            suffix = script_part[len(executable):]
+            # Require the remaining suffix to be at least 2 lowercase letters
+            # so we don't split single chars or random suffixes
+            if len(suffix) >= 2 and suffix.isalpha() and suffix.islower():
+                return executable
+    return None
 
 
 def match(command):

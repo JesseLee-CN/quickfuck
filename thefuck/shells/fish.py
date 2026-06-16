@@ -57,7 +57,7 @@ class Fish(Generic):
         # It is VERY important to have the variables declared WITHIN the alias
         return ('function {0} -d "Correct your previous console command"\n'
                 '  set -l fucked_up_command $history[1]\n'
-                '  set -l fucked_up_output (eval $fucked_up_command 2>&1)\n'
+                '  set -l fucked_up_output (LC_ALL=C eval $fucked_up_command 2>&1)\n'
                 '  env TF_SHELL=fish TF_ALIAS={0} TF_LAST_OUTPUT="$fucked_up_output"'
                 ' PYTHONIOENCODING=utf-8'
                 ' thefuck $fucked_up_command {2} $argv | read -l unfucked_command\n'

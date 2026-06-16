@@ -18,9 +18,14 @@ def _match_score(word: str, candidate: str) -> float:
 
 @sudo_support
 def match(command):
+    if not command.output:
+        return False
+    output_lower = command.output.lower()
     return (not which(command.script_parts[0])
-            and ('not found' in command.output
-                 or 'is not recognized as' in command.output)
+            and ('not found' in output_lower
+                 or 'is not recognized as' in output_lower
+                 or '找不到命令' in output_lower
+                 or '未找到命令' in output_lower)
             and bool(get_close_matches(command.script_parts[0],
                                        get_all_executables())))
 
