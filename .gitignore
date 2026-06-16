@@ -7,3 +7,6 @@ __pycache__/
 dist/
 build/
 .eggs/
+.claude/
+.agents/
+skills-lock.json
